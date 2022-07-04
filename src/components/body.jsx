@@ -1,4 +1,5 @@
 import TodoList from './todoList';
+import firebase from 'firebase/compat/app';
 import { useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
 import { addTodo } from '../store/action';
@@ -7,7 +8,8 @@ import { RiSendPlane2Line } from 'react-icons/ri';
 export default function Body({ isFocus }) {
   const dispatch = useDispatch();
   const todos = useSelector((state) => state.todos.todos);
-  useEffect(() => console.log(todos), [todos]);
+  const user = useSelector((state) => state.auth.user);
+
   const [title, setTitle] = useState('');
   const addToDo = (e) => {
     setTitle(e.target.value);
@@ -25,6 +27,22 @@ export default function Body({ isFocus }) {
     dispatch(addTodo({ text: title, id: todos.length + 1, completed: false }));
     setTitle('');
   };
+
+  useEffect(() => {
+    const getTodos = async () => {
+      await firebase
+        .firestore()
+        .collection('todos')
+        .where('userId', '==', user.id)
+        .onSnapshot((querySnapshot) =>
+          querySnapshot.docs.forEach((doc) => {
+            const { text, completed } = doc.data();
+            dispatch(addTodo({ text, id: doc.id, completed }));
+          })
+        );
+    };
+    getTodos();
+  }, [dispatch, user.id]);
   return (
     <div className=' max-w-4xl m-auto mt-20 px-4'>
       <div className='flex flex-row items-center justify-between'>

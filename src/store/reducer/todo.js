@@ -1,21 +1,5 @@
 const initialState = {
-  todos: [
-    {
-      id: 1,
-      text: 'Learn React',
-      completed: false,
-    },
-    {
-      id: 2,
-      text: 'Learn redux',
-      completed: false,
-    },
-    {
-      id: 3,
-      text: 'Learn react-redux',
-      completed: false,
-    },
-  ],
+  todos: [],
 };
 
 const todosReducer = (state = initialState, action) => {
