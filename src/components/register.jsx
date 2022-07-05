@@ -1,15 +1,16 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { UserAuth } from '../context/authContext';
-const Login = () => {
-  const [email, setEmail] = useState('amos@admin.com');
-  const [password, setPassword] = useState('12345678');
-  const { logIn } = UserAuth();
+const Register = () => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [name, setName] = useState('');
+  const { signUp } = UserAuth();
   const navigate = useNavigate();
-  const handleLogin = async (e) => {
+  const handleRegister = async (e) => {
     e.preventDefault();
     try {
-      await logIn(email, password);
+      await signUp({ email, password, name });
       navigate('/');
     } catch (error) {
       console.log(error);
@@ -19,8 +20,18 @@ const Login = () => {
   return (
     <div className='flex justify-center items-center h-screen'>
       <div className='card shadow-2xl w-auto bg-slate-200 p-3'>
-        <h1 className='text-center text-2xl font-bold'>Login</h1>
+        <h1 className='text-center text-2xl font-bold'>Register</h1>
         <div className='form-control w-full max-w-xs'>
+          <label className='label'>
+            <span className='label-text'>Your Name</span>
+          </label>
+          <input
+            type='text'
+            placeholder='Type here'
+            className='input input-bordered w-96 max-w-xs'
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
           <label className='label'>
             <span className='label-text'>E-mail</span>
           </label>
@@ -42,12 +53,12 @@ const Login = () => {
             onChange={(e) => setPassword(e.target.value)}
           />
         </div>
-        <button onClick={handleLogin} className='btn my-4'>
-          Login
+        <button onClick={handleRegister} className='btn my-4'>
+          Create acount
         </button>
       </div>
     </div>
   );
 };
 
-export default Login;
+export default Register;

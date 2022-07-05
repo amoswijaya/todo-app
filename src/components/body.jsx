@@ -1,48 +1,47 @@
 import TodoList from './todoList';
-import firebase from 'firebase/compat/app';
 import { useSelector } from 'react-redux';
-import { useEffect, useState } from 'react';
+import { useState, useEffect } from 'react';
 import { addTodo } from '../store/action';
 import { useDispatch } from 'react-redux';
 import { RiSendPlane2Line } from 'react-icons/ri';
+import { db } from '../firebase';
+import { arrayUnion, doc, updateDoc, onSnapshot } from 'firebase/firestore';
+import { UserAuth } from '../context/authContext';
 export default function Body({ isFocus }) {
   const dispatch = useDispatch();
-  const todos = useSelector((state) => state.todos.todos);
-  const user = useSelector((state) => state.auth.user);
-
+  const [todos, setTodos] = useState([]);
   const [title, setTitle] = useState('');
+  const { user } = UserAuth();
   const addToDo = (e) => {
     setTitle(e.target.value);
-    console.log(e.target.value);
   };
   const handleSubmit = (e) => {
     if (e.keyCode === 13) {
-      dispatch(
-        addTodo({ text: title, id: todos.length + 1, completed: false })
-      );
+      sendTodo();
       setTitle('');
     }
   };
-  const sendTodo = () => {
-    dispatch(addTodo({ text: title, id: todos.length + 1, completed: false }));
+  const sendTodo = async () => {
+    dispatch(addTodo({ text: title, id: +new Date(), completed: false }));
+    await updateDoc(doc(db, 'users', user?.email), {
+      todos: arrayUnion({
+        text: title,
+        id: +new Date(),
+        completed: false,
+      }),
+    });
+    console.log('done');
     setTitle('');
   };
 
   useEffect(() => {
-    const getTodos = async () => {
-      await firebase
-        .firestore()
-        .collection('todos')
-        .where('userId', '==', user.id)
-        .onSnapshot((querySnapshot) =>
-          querySnapshot.docs.forEach((doc) => {
-            const { text, completed } = doc.data();
-            dispatch(addTodo({ text, id: doc.id, completed }));
-          })
-        );
+    const getData = async () => {
+      await onSnapshot(doc(db, 'users', user.email), (snap) => {
+        setTodos(snap.data().todos);
+      });
     };
-    getTodos();
-  }, [dispatch, user.id]);
+    getData();
+  }, [user?.email]);
   return (
     <div className=' max-w-4xl m-auto mt-20 px-4'>
       <div className='flex flex-row items-center justify-between'>

@@ -1,23 +1,27 @@
 /* eslint-disable no-undef */
-import firebase from 'firebase/compat/app';
+
 import React, { useRef } from 'react';
 import Header from './header';
 import Body from './body';
 import { useNavigate } from 'react-router-dom';
+import { UserAuth } from '../context/authContext';
+
 const Home = () => {
   const headerRef = useRef(null);
   const navigate = useNavigate();
+  const { logOut } = UserAuth();
   const handlerClick = () => {
     headerRef.current.focus();
   };
-  const logOut = () => {
-    firebase.auth().signOut();
+  const logout = async () => {
+    await logOut();
     navigate('/login');
   };
+
   return (
     <>
       <Header onClick={handlerClick} />
-      <button className='btn' onClick={logOut}>
+      <button className='btn' onClick={logout}>
         LogOut
       </button>
       <Body isFocus={headerRef} />
