@@ -12,7 +12,7 @@ const AuthContext = createContext();
 
 export function AuthContextProvider({ children }) {
   const [user, setUser] = useState({});
-
+  const [theme, setTheme] = useState('');
   function signUp({ email, password, name }) {
     createUserWithEmailAndPassword(auth, email, password);
     setDoc(doc(db, 'users', email), {
@@ -38,8 +38,18 @@ export function AuthContextProvider({ children }) {
     };
   }, [user]);
 
+  useEffect(() => {
+    setTheme(localStorage.getItem('theme') || 'dark');
+  }, []);
+
+  function changeTheme(theme) {
+    return setTheme(theme);
+  }
+
   return (
-    <AuthContext.Provider value={{ signUp, logIn, logOut, user }}>
+    <AuthContext.Provider
+      value={{ signUp, logIn, logOut, user, changeTheme, theme }}
+    >
       {children}
     </AuthContext.Provider>
   );
