@@ -6,7 +6,7 @@ import ProtectedRoute from './components/protectRoute';
 import Register from './components/register';
 export default function App() {
   return (
-    <div data-theme='light' className='h-screen'>
+    <div className='h-screen bg-base-300'>
       <AuthContextProvider>
         <Routes>
           <Route

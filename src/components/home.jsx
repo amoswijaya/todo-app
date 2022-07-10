@@ -3,29 +3,20 @@
 import React, { useRef } from 'react';
 import Header from './header';
 import Body from './body';
-import { useNavigate } from 'react-router-dom';
 import { UserAuth } from '../context/authContext';
 
 const Home = () => {
   const headerRef = useRef(null);
-  const navigate = useNavigate();
-  const { logOut } = UserAuth();
+  const { theme } = UserAuth();
   const handlerClick = () => {
     headerRef.current.focus();
   };
-  const logout = async () => {
-    await logOut();
-    navigate('/login');
-  };
 
   return (
-    <>
+    <div data-theme={theme}>
       <Header onClick={handlerClick} />
-      <button className='btn' onClick={logout}>
-        LogOut
-      </button>
       <Body isFocus={headerRef} />
-    </>
+    </div>
   );
 };
 

@@ -4,7 +4,7 @@ import { UserAuth } from '../context/authContext';
 const Login = () => {
   const [email, setEmail] = useState('amos@admin.com');
   const [password, setPassword] = useState('12345678');
-  const { logIn } = UserAuth();
+  const { logIn, theme } = UserAuth();
   const navigate = useNavigate();
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -17,8 +17,11 @@ const Login = () => {
   };
 
   return (
-    <div className='flex justify-center items-center h-screen'>
-      <div className='card shadow-2xl w-auto bg-slate-200 p-3'>
+    <div
+      data-theme={theme}
+      className='flex justify-center items-center h-screen'
+    >
+      <div className='card shadow-2xl w-auto  p-3'>
         <h1 className='text-center text-2xl font-bold'>Login</h1>
         <div className='form-control w-full max-w-xs'>
           <label className='label'>

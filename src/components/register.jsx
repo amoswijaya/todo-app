@@ -5,21 +5,24 @@ const Register = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
-  const { signUp } = UserAuth();
+  const { signUp, theme } = UserAuth();
   const navigate = useNavigate();
   const handleRegister = async (e) => {
     e.preventDefault();
     try {
       await signUp({ email, password, name });
-      navigate('/');
+      navigate('/login');
     } catch (error) {
       console.log(error);
     }
   };
 
   return (
-    <div className='flex justify-center items-center h-screen'>
-      <div className='card shadow-2xl w-auto bg-slate-200 p-3'>
+    <div
+      data-theme={theme}
+      className='flex justify-center items-center h-screen'
+    >
+      <div className='card shadow-2xl w-auto  p-3'>
         <h1 className='text-center text-2xl font-bold'>Register</h1>
         <div className='form-control w-full max-w-xs'>
           <label className='label'>

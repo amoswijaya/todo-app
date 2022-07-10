@@ -1,44 +1,69 @@
-import {
-  RiCheckboxCircleFill,
-  RiCheckboxCircleLine,
-  RiDeleteBin6Line,
-} from 'react-icons/ri';
-import { useDispatch } from 'react-redux';
-import { removeTodo, toggleTodo } from '../store/action';
-export default function TodoList({ todo }) {
-  const dispatch = useDispatch();
+import { RiArrowDropDownLine, RiArrowDropUpLine } from 'react-icons/ri';
+import { FiTrash2 } from 'react-icons/fi';
+import { useState } from 'react';
+export default function TodoList({ todo, handleDelete, handleToggle }) {
+  const [expanded, setExpanded] = useState(false);
   const destroyerTodo = () => {
-    console.log(todo.id);
-    dispatch(removeTodo(todo.id));
+    handleDelete(todo.id);
   };
   const toggleTodoItem = () => {
-    dispatch(toggleTodo(todo.id));
+    handleToggle(todo.id);
   };
+
+  const handleExpand = () => {
+    setExpanded(!expanded);
+  };
+
   return (
-    <div className='w-full bg-secondary py-2 px-4 text-white rounded-lg flex flex-row items-center justify-between my-4'>
-      <div className=' flex flex-row items-center'>
-        {todo.completed ? (
-          <RiCheckboxCircleFill
-            size={42}
-            className='cursor-pointer'
-            onClick={toggleTodoItem}
-          />
-        ) : (
-          <RiCheckboxCircleLine
-            size={42}
-            className='cursor-pointer'
-            onClick={toggleTodoItem}
-          />
-        )}
-        <p className='ml-2 text-xl'>{todo.text}</p>
-      </div>
-      <div className=' flex flex-row items-center'>
-        <RiDeleteBin6Line
-          onClick={destroyerTodo}
-          size={32}
-          className='text-gray-400 cursor-pointer'
+    <div className=' card my-4   shadow drop-shadow-xl rounded-lg w-full p-2 bg-base-100 '>
+      <div className='flex flex-row items-center'>
+        <input
+          type='checkbox'
+          checked={todo.completed}
+          onChange={toggleTodoItem}
+          className='checkbox checkbox-primary'
         />
+        <div className='flex mx-2 w-full justify-between items-center'>
+          <p
+            className={
+              todo.completed ? 'line-through opacity-50 text-lg' : 'text-lg'
+            }
+          >
+            {todo.text}
+          </p>
+          <div className='flex-row flex items-center'>
+            <FiTrash2
+              size={24}
+              className='cursor-pointer hover:opacity-50 text-red-500'
+              onClick={destroyerTodo}
+            />
+            {!expanded ? (
+              <RiArrowDropDownLine
+                size={32}
+                className='cursor-pointer hover:opacity-50 '
+                onClick={handleExpand}
+              />
+            ) : (
+              <RiArrowDropUpLine
+                size={32}
+                className='cursor-pointer hover:opacity-50 '
+                onClick={handleExpand}
+              />
+            )}
+          </div>
+        </div>
       </div>
+      {expanded && (
+        <div className='bg-base-200 rounded-lg p-1 mt-2'>
+          <span
+            className={
+              todo.completed ? 'line-through opacity-50 text-sm' : 'text-sm'
+            }
+          >
+            {todo.description}
+          </span>
+        </div>
+      )}
     </div>
   );
 }
