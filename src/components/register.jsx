@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2';
 import { UserAuth } from '../context/authContext';
 const Register = () => {
   const [email, setEmail] = useState('');
@@ -10,8 +11,20 @@ const Register = () => {
   const handleRegister = async (e) => {
     e.preventDefault();
     try {
-      await signUp({ email, password, name });
-      navigate('/login');
+      if (email === '' || password === '' || name === '') {
+        Swal.fire({
+          text: 'Please add your email and password',
+          toast: true,
+          position: 'top',
+          timer: 1000,
+          showConfirmButton: false,
+          icon: 'error',
+          timerProgressBar: true,
+        });
+      } else {
+        await signUp({ email, password, name });
+        navigate('/login');
+      }
     } catch (error) {
       console.log(error);
     }
@@ -20,9 +33,9 @@ const Register = () => {
   return (
     <div
       data-theme={theme}
-      className='flex justify-center items-center h-screen'
+      className='flex justify-center items-center h-screen bg-base-300'
     >
-      <div className='card shadow-2xl w-auto  p-3'>
+      <div className='card shadow-2xl w-auto bg-base-100  p-3'>
         <h1 className='text-center text-2xl font-bold'>Register</h1>
         <div className='form-control w-full max-w-xs'>
           <label className='label'>
