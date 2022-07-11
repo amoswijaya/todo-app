@@ -33,13 +33,9 @@ export default function Body({ isFocus }) {
       }),
     });
     Swal.fire({
-      text: 'Toast with custom target',
-      target: '#custom-toast',
-      customClass: {
-        container: 'absolute',
-      },
+      text: 'Todo added',
       toast: true,
-      position: 'bottom-right',
+      position: 'top',
       timer: 3000,
       showConfirmButton: false,
       icon: 'success',
@@ -57,11 +53,7 @@ export default function Body({ isFocus }) {
         todos: result,
       });
       Swal.fire({
-        text: 'Toast with custom target',
-        target: '#custom-toast',
-        customClass: {
-          container: 'absolute',
-        },
+        text: 'Delete Tasks successfully',
         toast: true,
         position: 'bottom-right',
         timer: 3000,
